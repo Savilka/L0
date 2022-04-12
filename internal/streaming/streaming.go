@@ -11,17 +11,20 @@ import (
 	"log"
 )
 
+// Streaming is a structure for streaming service
 type Streaming struct {
 	sc    stan.Conn
 	cache *caching.Cache
 	store *store.Store
 }
 
+// InitStreaming initialize streaming service
 func (s *Streaming) InitStreaming(cache *caching.Cache, store *store.Store) {
 	s.cache = cache
 	s.store = store
 }
 
+// ConnectAndSubscribe connect to nats-streaming and subscribes on channel
 func (s *Streaming) ConnectAndSubscribe(stanClusterID, clientID, URL string) error {
 	var err error
 	s.sc, err = stan.Connect(stanClusterID, clientID, stan.NatsURL(URL))

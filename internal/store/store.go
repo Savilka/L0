@@ -7,10 +7,12 @@ import (
 	"github.com/jackc/pgx/v4/pgxpool"
 )
 
+// Store is a database structure
 type Store struct {
 	dbpool *pgxpool.Pool
 }
 
+// NewStore initialized service store
 func NewStore(url string) (*Store, error) {
 	var err error
 	dbpool, err := pgxpool.Connect(context.Background(), url)
@@ -21,6 +23,7 @@ func NewStore(url string) (*Store, error) {
 	return &Store{dbpool: dbpool}, nil
 }
 
+// AddOrder insert order into database
 func (s *Store) AddOrder(order model.Order) error {
 	_, err := s.dbpool.Exec(context.Background(), "insert into orders (\"order\") values ($1)", order)
 	if err != nil {
@@ -29,7 +32,8 @@ func (s *Store) AddOrder(order model.Order) error {
 	return nil
 }
 
-func (s *Store) GetOrder(id string) (model.Order, error) {
+// getOrder return order from database
+func (s *Store) getOrder(id string) (model.Order, error) {
 	var order model.Order
 	err := s.dbpool.QueryRow(context.Background(), "select \"order\" from orders where id=$1", id).Scan(&order)
 	if err != nil {
@@ -39,7 +43,8 @@ func (s *Store) GetOrder(id string) (model.Order, error) {
 	return order, nil
 }
 
-func (s *Store) RestoreCash(cache *caching.Cache) error {
+// RestoreCache fill service cache from database
+func (s *Store) RestoreCache(cache *caching.Cache) error {
 	rows, err := s.dbpool.Query(context.Background(), "select \"order\" from orders")
 	if err != nil {
 		return err

@@ -12,11 +12,13 @@ import (
 	"os"
 )
 
+// App is main structure of service
 type App struct {
 	stream streaming.Streaming
 	api    api.Api
 }
 
+// Run running streaming service and server
 func (a *App) Run(stanClusterID, clientID, URL string) {
 	err := a.Init()
 	if err != nil {
@@ -34,6 +36,7 @@ func (a *App) Run(stanClusterID, clientID, URL string) {
 	}
 }
 
+// Init initialize api, cache, store and streaming service
 func (a *App) Init() error {
 	cache := caching.NewCache()
 
@@ -54,7 +57,7 @@ func (a *App) Init() error {
 
 	a.stream.InitStreaming(cache, newStore)
 
-	err = newStore.RestoreCash(cache)
+	err = newStore.RestoreCache(cache)
 	if err != nil {
 		return err
 	}

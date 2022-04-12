@@ -61,11 +61,11 @@ func TestStore_GetOrder(t *testing.T) {
 	err := store.AddOrder(model.Order{OrderUID: "1"})
 	assert.Equal(t, err, nil)
 
-	order, err := store.GetOrder("1")
+	order, err := store.getOrder("1")
 	assert.Equal(t, order, model.Order{OrderUID: "1"})
 	assert.Equal(t, err, nil)
 
-	order, err = store.GetOrder("2")
+	order, err = store.getOrder("2")
 	assert.Equal(t, order, model.Order{})
 	assert.Equal(t, err.Error(), "no rows in result set")
 	clearTable()
@@ -78,7 +78,7 @@ func TestStore_RestoreCash(t *testing.T) {
 	assert.Equal(t, err, nil)
 
 	cache := caching.NewCache()
-	err = store.RestoreCash(cache)
+	err = store.RestoreCache(cache)
 	assert.Equal(t, err, nil)
 	order, err := cache.Get("1")
 	assert.Equal(t, err, nil)

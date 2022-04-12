@@ -11,15 +11,18 @@ type Api struct {
 	cache  *caching.Cache
 }
 
+// InitRouter initialize router, CORS middleware, service cache and routes
 func (a *Api) InitRouter(cache *caching.Cache) {
 	a.cache = cache
 	a.Router = gin.Default()
 
 	a.Router.Use(CORSMiddleware())
 
+	//Routes
 	a.Router.GET("/order/", a.getOrder)
 }
 
+// getOrder is a handler for "/order/" route
 func (a *Api) getOrder(c *gin.Context) {
 	id := c.Query("id")
 	order, err := a.cache.Get(id)
@@ -31,6 +34,7 @@ func (a *Api) getOrder(c *gin.Context) {
 	c.JSON(http.StatusOK, order)
 }
 
+// CORSMiddleware for local testing
 func CORSMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")

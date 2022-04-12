@@ -6,6 +6,7 @@ import (
 	"log"
 )
 
+// script for publish data in channel
 func main() {
 	sc, err := stan.Connect("test-cluster", "stan", stan.NatsURL("nats://0.0.0.0:4222"))
 	if err != nil {
